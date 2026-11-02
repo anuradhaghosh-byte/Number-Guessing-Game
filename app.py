@@ -18,7 +18,7 @@ st.markdown("""
     text-align: center;
     font-size: 40px;
     font-weight: bold;
-    color: #FFD700;
+    color: white;
 }
 
 .subtitle {
@@ -32,11 +32,12 @@ st.markdown("""
     font-size: 38px;
     margin: 20px 0;
     letter-spacing: 10px;
+    color: white;
 }
 
 .game-box {
-    background: rgba(255,255,255,0.10);
-    border: 2px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.5);
     border-radius: 25px;
     padding: 25px;
     text-align: center;
@@ -44,14 +45,14 @@ st.markdown("""
 }
 
 .number-display {
-    background: rgba(0,0,0,0.25);
-    border: 2px solid #FFD700;
+    background: transparent;
+    border: 2px solid white;
     border-radius: 20px;
     min-height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #FFD700;
+    color: white;
     font-size: 85px;
     font-weight: bold;
     margin: 15px 0 25px 0;
@@ -72,20 +73,29 @@ st.markdown("""
     color: #FF5252;
 }
 
+/* Transparent number buttons */
 div.stButton > button {
     width: 100%;
     border-radius: 12px;
     height: 48px;
-    background: #FFD700;
-    color: #141E30;
+    background: transparent !important;
+    color: white !important;
+    border: 1.5px solid white !important;
     font-weight: bold;
-    border: none;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 div.stButton > button:hover {
-    background: #FFC107;
-    color: black;
+    background: rgba(255,255,255,0.15) !important;
+    color: white !important;
+    border: 1.5px solid white !important;
+}
+
+/* Submit and Play Again buttons */
+div.stButton > button[kind="primary"] {
+    background: white !important;
+    color: #141E30 !important;
+    border: 1px solid white !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -128,12 +138,11 @@ st.markdown(
 with st.container(border=True):
 
     st.markdown(
-        "<h2 style='text-align:center; color:#FFD700;'>"
+        "<h2 style='text-align:center; color:white;'>"
         "CHOOSE YOUR NUMBER</h2>",
         unsafe_allow_html=True
     )
 
-    # Number display
     if st.session_state.won:
         st.markdown(
             '<div class="number-display">🎉</div>',
@@ -159,7 +168,6 @@ with st.container(border=True):
         )
 
     else:
-
         selected = st.session_state.selected_number
 
         display_number = (
@@ -194,9 +202,11 @@ with st.container(border=True):
 
         st.write("")
 
-        # Submit button
-        if st.button("SUBMIT GUESS", use_container_width=True):
-
+        if st.button(
+            "SUBMIT GUESS",
+            use_container_width=True,
+            type="primary"
+        ):
             if st.session_state.selected_number is None:
                 st.warning("Please choose a number first!")
 
@@ -223,8 +233,11 @@ with st.container(border=True):
 
 # Play Again
 if st.session_state.won or st.session_state.game_over:
-
-    if st.button("🔄 PLAY AGAIN", use_container_width=True):
+    if st.button(
+        "🔄 PLAY AGAIN",
+        use_container_width=True,
+        type="primary"
+    ):
         reset_game()
         st.rerun()
 
