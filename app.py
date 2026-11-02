@@ -1,14 +1,12 @@
 import random
 import streamlit as st
 
-# Page configuration
 st.set_page_config(
     page_title="Number Guessing Game",
     page_icon="🎮",
     layout="centered"
 )
 
-# Custom CSS
 st.markdown("""
 <style>
 .stApp {
@@ -18,10 +16,9 @@ st.markdown("""
 
 .title {
     text-align: center;
-    font-size: 42px;
+    font-size: 40px;
     font-weight: bold;
     color: #FFD700;
-    margin-bottom: 5px;
 }
 
 .subtitle {
@@ -41,14 +38,29 @@ st.markdown("""
     background: rgba(255,255,255,0.10);
     border: 2px solid rgba(255,255,255,0.2);
     border-radius: 25px;
-    padding: 35px 25px;
+    padding: 25px;
     text-align: center;
     box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.number-display {
+    background: rgba(0,0,0,0.25);
+    border: 2px solid #FFD700;
+    border-radius: 20px;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFD700;
+    font-size: 85px;
+    font-weight: bold;
+    margin: 15px 0 25px 0;
 }
 
 .result {
     font-size: 35px;
     font-weight: bold;
+    text-align: center;
     margin: 20px 0;
 }
 
@@ -63,7 +75,7 @@ st.markdown("""
 div.stButton > button {
     width: 100%;
     border-radius: 12px;
-    height: 50px;
+    height: 48px;
     background: #FFD700;
     color: #141E30;
     font-weight: bold;
@@ -79,22 +91,23 @@ div.stButton > button:hover {
 """, unsafe_allow_html=True)
 
 
-# Initialize game
 def reset_game():
-    st.session_state.secret_number = random.randint(1, 10)
+    st.session_state.secret_number = random.randint(0, 9)
     st.session_state.attempts = 3
     st.session_state.game_over = False
     st.session_state.won = False
-    st.session_state.message = "Guess a number between 1 and 10!"
+    st.session_state.selected_number = None
+    st.session_state.message = "Select a number from 0 to 9"
 
 
 if "secret_number" not in st.session_state:
     reset_game()
 
 
-# Heading
-st.markdown('<div class="title">🎮 NUMBER GUESSING GAME</div>',
-            unsafe_allow_html=True)
+st.markdown(
+    '<div class="title">🎮 NUMBER GUESSING GAME</div>',
+    unsafe_allow_html=True
+)
 
 st.markdown(
     '<div class="subtitle">Can you guess the secret number?</div>',
@@ -110,61 +123,111 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # Main game box
-st.markdown('<div class="game-box">', unsafe_allow_html=True)
+with st.container(border=True):
 
-if st.session_state.won:
     st.markdown(
-        '<div class="result win">🎉 YOU WIN!</div>',
+        "<h2 style='text-align:center; color:#FFD700;'>"
+        "CHOOSE YOUR NUMBER</h2>",
         unsafe_allow_html=True
     )
-    st.success("Congratulations! You guessed the correct number.")
 
-elif st.session_state.game_over:
-    st.markdown(
-        '<div class="result lose">GAME OVER</div>',
-        unsafe_allow_html=True
-    )
-    st.error(
-        f"The correct number was {st.session_state.secret_number}."
-    )
+    # Number display
+    if st.session_state.won:
+        st.markdown(
+            '<div class="number-display">🎉</div>',
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            '<div class="result win">YOU WIN!</div>',
+            unsafe_allow_html=True
+        )
+        st.success("Congratulations! You guessed the correct number.")
 
-else:
-    st.markdown("### Enter Your Guess")
+    elif st.session_state.game_over:
+        st.markdown(
+            '<div class="number-display">GAME OVER</div>',
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            '<div class="result lose">GAME OVER</div>',
+            unsafe_allow_html=True
+        )
+        st.error(
+            f"The correct number was {st.session_state.secret_number}"
+        )
 
-    guess = st.number_input(
-        "Choose a number",
-        min_value=1,
-        max_value=10,
-        step=1,
-        key="guess_input"
-    )
+    else:
 
-    if st.button("SUBMIT GUESS"):
-        if guess == st.session_state.secret_number:
-            st.session_state.won = True
-            st.session_state.message = "Correct guess!"
-        else:
-            st.session_state.attempts -= 1
+        selected = st.session_state.selected_number
 
-            if st.session_state.attempts == 0:
-                st.session_state.game_over = True
-            elif guess < st.session_state.secret_number:
-                st.session_state.message = "Too low! Try again."
+        display_number = (
+            str(selected) if selected is not None else "?"
+        )
+
+        st.markdown(
+            f'<div class="number-display">{display_number}</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            "<p style='text-align:center; color:white; "
+            "font-size:17px;'>Choose a number from 0 to 9</p>",
+            unsafe_allow_html=True
+        )
+
+        # Number buttons: 0 to 9
+        for row in range(2):
+            cols = st.columns(5)
+
+            for col in range(5):
+                number = row * 5 + col
+
+                with cols[col]:
+                    if st.button(
+                        str(number),
+                        key=f"number_{number}"
+                    ):
+                        st.session_state.selected_number = number
+                        st.rerun()
+
+        st.write("")
+
+        # Submit button
+        if st.button("SUBMIT GUESS", use_container_width=True):
+
+            if st.session_state.selected_number is None:
+                st.warning("Please choose a number first!")
+
+            elif st.session_state.selected_number == st.session_state.secret_number:
+                st.session_state.won = True
+                st.rerun()
+
             else:
-                st.session_state.message = "Too high! Try again."
+                st.session_state.attempts -= 1
 
-        st.rerun()
+                if st.session_state.attempts == 0:
+                    st.session_state.game_over = True
+                else:
+                    if st.session_state.selected_number < st.session_state.secret_number:
+                        st.session_state.message = "Too Low! Try Again."
+                    else:
+                        st.session_state.message = "Too High! Try Again."
 
-    st.info(st.session_state.message)
+                st.session_state.selected_number = None
+                st.rerun()
 
-st.markdown('</div>', unsafe_allow_html=True)
+        st.info(st.session_state.message)
 
-# Play again
+
+# Play Again
 if st.session_state.won or st.session_state.game_over:
-    if st.button("🔄 PLAY AGAIN"):
+
+    if st.button("🔄 PLAY AGAIN", use_container_width=True):
         reset_game()
         st.rerun()
+
 
 st.markdown(
     "<p style='text-align:center; color:#AAAAAA; margin-top:30px;'>"
