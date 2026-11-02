@@ -1,3 +1,4 @@
+
 import random
 import streamlit as st
 
@@ -7,7 +8,6 @@ st.set_page_config(
     page_icon="🎮",
     layout="centered"
 )
-
 
 # ---------------- RESET GAME ----------------
 def reset_game():
@@ -28,6 +28,7 @@ if "secret_number" not in st.session_state:
 st.markdown("""
 <style>
 
+/* Main Background */
 .stApp {
     background: linear-gradient(135deg, #101426, #191d38, #242044);
     color: #E2E8F0;
@@ -38,6 +39,7 @@ st.markdown("""
     padding-top: 2rem;
 }
 
+/* Main Title */
 .title {
     text-align: center;
     font-size: 36px;
@@ -53,6 +55,7 @@ st.markdown("""
     margin-bottom: 20px;
 }
 
+/* Game Card */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     border: 1px solid #45436B;
     border-radius: 22px;
@@ -60,6 +63,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     padding: 20px;
 }
 
+/* Stars */
 .stars {
     text-align: center;
     font-size: 32px;
@@ -67,6 +71,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     letter-spacing: 8px;
 }
 
+/* Number Display */
 .number-display {
     background: #171B32;
     border: 2px solid #7770C9;
@@ -81,6 +86,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin: 15px 0 25px 0;
 }
 
+/* Guess Indicator */
 .guess-bar {
     width: 100%;
     height: 10px;
@@ -97,7 +103,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     transition: all 0.4s ease;
 }
 
-/* NUMBER BUTTONS */
+/* Number Buttons */
 div.stButton > button {
     width: 100%;
     border-radius: 12px;
@@ -116,7 +122,7 @@ div.stButton > button:hover {
     border-color: #A78BFA !important;
 }
 
-/* SUBMIT BUTTON */
+/* Submit Button */
 div.stButton > button[kind="primary"] {
     background: #8B5CF6 !important;
     color: white !important;
@@ -129,7 +135,7 @@ div.stButton > button[kind="primary"]:hover {
     color: #17132C !important;
 }
 
-/* RESULT */
+/* Result */
 .result {
     font-size: 35px;
     font-weight: bold;
@@ -145,96 +151,148 @@ div.stButton > button[kind="primary"]:hover {
     color: #FB7185;
 }
 
+/* Status Text */
 .stAlert {
     border-radius: 12px;
 }
 
 
-/* -------- CENTER BALLOON BURST -------- */
+/* ---------------- FULL SCREEN BALLOON ANIMATION ---------------- */
 
 .balloon-container {
     position: fixed;
-    left: 50%;
-    bottom: 12%;
-    width: 1px;
-    height: 1px;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
+    overflow: hidden;
     z-index: 9999;
 }
 
 .balloon {
     position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 35px;
-    height: 45px;
+    bottom: -100px;
+    width: 38px;
+    height: 48px;
     border-radius: 50%;
-    transform: translateX(-50%);
-    animation: balloonBurst 3.2s cubic-bezier(.15,.65,.25,1) forwards;
+    opacity: 0;
+    animation: balloonFly 12s linear infinite;
 }
 
-.balloon:after {
+/* Balloon String */
+.balloon::after {
     content: "";
     position: absolute;
     width: 1px;
-    height: 55px;
-    background: rgba(255,255,255,0.65);
-    top: 44px;
-    left: 17px;
+    height: 65px;
+    background: rgba(255,255,255,0.5);
+    top: 46px;
+    left: 19px;
 }
 
-/* BALLOON COLORS AND DIRECTIONS */
+/* Balloon Positions and Colors */
 
-.balloon:nth-child(1)  { --move: -350px; background: #FF4D6D; animation-delay: 0s; }
-.balloon:nth-child(2)  { --move: -280px; background: #FFD166; animation-delay: 0s; }
-.balloon:nth-child(3)  { --move: -210px; background: #06D6A0; animation-delay: 0s; }
-.balloon:nth-child(4)  { --move: -140px; background: #4CC9F0; animation-delay: 0s; }
-.balloon:nth-child(5)  { --move: -70px; background: #C77DFF; animation-delay: 0s; }
-.balloon:nth-child(6)  { --move: 0px; background: #FF4D6D; animation-delay: 0s; }
-.balloon:nth-child(7)  { --move: 70px; background: #FFD166; animation-delay: 0s; }
-.balloon:nth-child(8)  { --move: 140px; background: #06D6A0; animation-delay: 0s; }
-.balloon:nth-child(9)  { --move: 210px; background: #4CC9F0; animation-delay: 0s; }
-.balloon:nth-child(10) { --move: 280px; background: #C77DFF; animation-delay: 0s; }
-.balloon:nth-child(11) { --move: 350px; background: #FF85A1; animation-delay: 0s; }
-.balloon:nth-child(12) { --move: -320px; background: #FFD166; animation-delay: 0.1s; }
-.balloon:nth-child(13) { --move: -240px; background: #4CC9F0; animation-delay: 0.1s; }
-.balloon:nth-child(14) { --move: -160px; background: #C77DFF; animation-delay: 0.1s; }
-.balloon:nth-child(15) { --move: -80px; background: #06D6A0; animation-delay: 0.1s; }
-.balloon:nth-child(16) { --move: 80px; background: #FF4D6D; animation-delay: 0.1s; }
-.balloon:nth-child(17) { --move: 160px; background: #FFD166; animation-delay: 0.1s; }
-.balloon:nth-child(18) { --move: 240px; background: #4CC9F0; animation-delay: 0.1s; }
-.balloon:nth-child(19) { --move: 320px; background: #C77DFF; animation-delay: 0.1s; }
-.balloon:nth-child(20) { --move: 0px; background: #FF85A1; animation-delay: 0.15s; }
+.balloon:nth-child(1) {
+    left: 5%;
+    background: #FF4D6D;
+    animation-delay: 0s;
+}
 
+.balloon:nth-child(2) {
+    left: 18%;
+    background: #FFD166;
+    animation-delay: 1s;
+}
 
-/* BALLOON ANIMATION */
+.balloon:nth-child(3) {
+    left: 32%;
+    background: #06D6A0;
+    animation-delay: 2s;
+}
 
-@keyframes balloonBurst {
+.balloon:nth-child(4) {
+    left: 46%;
+    background: #4CC9F0;
+    animation-delay: 0.5s;
+}
+
+.balloon:nth-child(5) {
+    left: 60%;
+    background: #C77DFF;
+    animation-delay: 3s;
+}
+
+.balloon:nth-child(6) {
+    left: 74%;
+    background: #FF8FAB;
+    animation-delay: 1.5s;
+}
+
+.balloon:nth-child(7) {
+    left: 88%;
+    background: #F9C74F;
+    animation-delay: 2.5s;
+}
+
+.balloon:nth-child(8) {
+    left: 12%;
+    background: #90DBF4;
+    animation-delay: 4s;
+}
+
+.balloon:nth-child(9) {
+    left: 40%;
+    background: #B9FBC0;
+    animation-delay: 5s;
+}
+
+.balloon:nth-child(10) {
+    left: 68%;
+    background: #F15BB5;
+    animation-delay: 4.5s;
+}
+
+.balloon:nth-child(11) {
+    left: 95%;
+    background: #9B5DE5;
+    animation-delay: 6s;
+}
+
+.balloon:nth-child(12) {
+    left: 25%;
+    background: #00F5D4;
+    animation-delay: 7s;
+}
+
+/* Slow Floating Animation */
+@keyframes balloonFly {
 
     0% {
-        transform: translate(-50%, 0) scale(0.35);
+        transform: translateY(0) translateX(0) rotate(-8deg);
         opacity: 0;
     }
 
-    12% {
+    10% {
         opacity: 1;
-        transform: translate(
-            calc(-50% + var(--move) * 0.15),
-            -90px
-        ) scale(1);
+    }
+
+    50% {
+        transform: translateY(-60vh) translateX(25px) rotate(8deg);
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
     }
 
     100% {
+        transform: translateY(-120vh) translateX(-20px) rotate(-8deg);
         opacity: 0;
-        transform: translate(
-            calc(-50% + var(--move)),
-            -105vh
-        ) rotate(18deg) scale(0.9);
     }
 }
 
 
-/* -------- FALLING CONFETTI -------- */
+/* ---------------- FALLING CONFETTI ---------------- */
 
 .confetti-container {
     position: fixed;
@@ -279,14 +337,13 @@ div.stButton > button[kind="primary"]:hover {
     0% {
         transform: translateY(-20px) rotate(0deg);
     }
-
     100% {
         transform: translateY(110vh) rotate(720deg);
     }
 }
 
 
-/* -------- PAGE TEAR ANIMATION -------- */
+/* ---------------- PAGE TEAR ANIMATION ---------------- */
 
 .tear-overlay {
     position: fixed;
@@ -327,7 +384,6 @@ div.stButton > button[kind="primary"]:hover {
     0% {
         transform: translateY(0);
     }
-
     100% {
         transform: translateY(-110%);
     }
@@ -337,14 +393,13 @@ div.stButton > button[kind="primary"]:hover {
     0% {
         transform: translateY(0);
     }
-
     100% {
         transform: translateY(110%);
     }
 }
 
 
-/* -------- PLAY AGAIN HIGHLIGHT -------- */
+/* ---------------- PLAY AGAIN HIGHLIGHT ---------------- */
 
 .st-key-play_again button {
     background: linear-gradient(90deg, #8B5CF6, #A78BFA) !important;
@@ -362,7 +417,6 @@ div.stButton > button[kind="primary"]:hover {
         box-shadow: 0 0 8px rgba(167,139,250,0.5);
         transform: scale(1);
     }
-
     50% {
         box-shadow: 0 0 25px rgba(167,139,250,1);
         transform: scale(1.03);
@@ -370,8 +424,7 @@ div.stButton > button[kind="primary"]:hover {
 }
 
 
-/* FOOTER */
-
+/* Footer */
 .footer {
     text-align: center;
     color: #9299BB;
@@ -410,12 +463,9 @@ st.markdown(
 # ---------------- GUESS INDICATOR BAR ----------------
 
 if st.session_state.guess_distance is None:
-
     bar_color = "transparent"
     bar_width = 0
-
 else:
-
     distance = st.session_state.guess_distance
     closeness = max(0, 1 - (distance / 10))
 
@@ -424,7 +474,6 @@ else:
 
     bar_color = f"rgb({red},{green},0)"
     bar_width = 100
-
 
 st.markdown(
     f"""
@@ -448,19 +497,28 @@ with st.container(border=True):
         unsafe_allow_html=True
     )
 
+
     # ---------------- WIN SCREEN ----------------
 
     if st.session_state.won:
 
-        balloons = "".join(
-            '<div class="balloon"></div>'
-            for _ in range(20)
-        )
-
-        st.markdown(
-            f'<div class="balloon-container">{balloons}</div>',
-            unsafe_allow_html=True
-        )
+        # Full Screen Balloon Animation
+        st.markdown("""
+        <div class="balloon-container">
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+        </div>
+        """, unsafe_allow_html=True)
 
         st.markdown(
             '<div class="number-display">🎉</div>',
@@ -481,6 +539,7 @@ with st.container(border=True):
 
     elif st.session_state.game_over:
 
+        # Page Tear Animation
         st.markdown("""
         <div class="tear-overlay">
             <div class="tear-half tear-top"></div>
@@ -488,6 +547,7 @@ with st.container(border=True):
         </div>
         """, unsafe_allow_html=True)
 
+        # Falling Confetti Animation
         st.markdown("""
         <div class="confetti-container">
             <div class="confetti" style="left:5%;animation-delay:0s"></div>
@@ -522,6 +582,7 @@ with st.container(border=True):
 
     else:
 
+        # Selected Number Display
         selected = st.session_state.selected_number
 
         display_number = (
@@ -550,7 +611,7 @@ with st.container(border=True):
             [None, 10, None]
         ]
 
-        for row in number_layout:
+        for row_index, row in enumerate(number_layout):
 
             cols = st.columns(3)
 
@@ -618,7 +679,6 @@ with st.container(border=True):
                 else:
 
                     st.session_state.message = "Too High! Try Again."
-
 
                 st.session_state.selected_number = None
                 st.rerun()
