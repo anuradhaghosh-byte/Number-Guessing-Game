@@ -173,7 +173,7 @@ div.stButton > button[kind="primary"]:hover {
     width: 35px;
     height: 45px;
     border-radius: 50%;
-    animation: fly 10s linear infinite;
+    animation: fly 16s linear infinite;
 }
 
 .balloon:after {
@@ -224,27 +224,6 @@ div.stButton > button[kind="primary"]:hover {
         transform: translateY(-120vh) rotate(20deg);
     }
 }
-
-.balloon:nth-child(1)  { --move: -350px; background: #FF4D6D; animation-delay: 0s; }
-.balloon:nth-child(2)  { --move: -280px; background: #FFD166; animation-delay: 0s; }
-.balloon:nth-child(3)  { --move: -210px; background: #06D6A0; animation-delay: 0s; }
-.balloon:nth-child(4)  { --move: -140px; background: #4CC9F0; animation-delay: 0s; }
-.balloon:nth-child(5)  { --move: -70px; background: #C77DFF; animation-delay: 0s; }
-.balloon:nth-child(6)  { --move: 0px; background: #FF4D6D; animation-delay: 0s; }
-.balloon:nth-child(7)  { --move: 70px; background: #FFD166; animation-delay: 0s; }
-.balloon:nth-child(8)  { --move: 140px; background: #06D6A0; animation-delay: 0s; }
-.balloon:nth-child(9)  { --move: 210px; background: #4CC9F0; animation-delay: 0s; }
-.balloon:nth-child(10) { --move: 280px; background: #C77DFF; animation-delay: 0s; }
-.balloon:nth-child(11) { --move: 350px; background: #FF85A1; animation-delay: 0s; }
-.balloon:nth-child(12) { --move: -320px; background: #FFD166; animation-delay: 0.1s; }
-.balloon:nth-child(13) { --move: -240px; background: #4CC9F0; animation-delay: 0.1s; }
-.balloon:nth-child(14) { --move: -160px; background: #C77DFF; animation-delay: 0.1s; }
-.balloon:nth-child(15) { --move: -80px; background: #06D6A0; animation-delay: 0.1s; }
-.balloon:nth-child(16) { --move: 80px; background: #FF4D6D; animation-delay: 0.1s; }
-.balloon:nth-child(17) { --move: 160px; background: #FFD166; animation-delay: 0.1s; }
-.balloon:nth-child(18) { --move: 240px; background: #4CC9F0; animation-delay: 0.1s; }
-.balloon:nth-child(19) { --move: 320px; background: #C77DFF; animation-delay: 0.1s; }
-.balloon:nth-child(20) { --move: 0px; background: #FF85A1; animation-delay: 0.15s; }
 
 /* ---------------- FALLING CONFETTI ---------------- */
 .confetti-container {
@@ -441,35 +420,33 @@ with st.container(border=True):
         unsafe_allow_html=True
     )
 
-   # ---------------- WIN SCREEN ----------------
-if st.session_state.won:
+    # ---------------- WIN SCREEN ----------------
+    if st.session_state.won:
 
-    # Center Balloon Burst Animation
-    balloons = "".join(
-        '<div class="balloon"></div>'
-        for i in range(20)
-    )
+        # Slow Balloon Animation
+        st.markdown("""
+        <div class="balloon-container">
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown(
-        f'<div class="balloon-container">{balloons}</div>',
-        unsafe_allow_html=True
-    )
+        st.markdown(
+            '<div class="number-display">🎉</div>',
+            unsafe_allow_html=True
+        )
 
-    st.markdown(
-        '<div class="number-display">🎉</div>',
-        unsafe_allow_html=True
-    )
+        st.markdown(
+            '<div class="result win">YOU WIN!</div>',
+            unsafe_allow_html=True
+        )
 
-    st.markdown(
-        '<div class="result win">YOU WIN!</div>',
-        unsafe_allow_html=True
-    )
-
-    st.success("Congratulations! You guessed the correct number.")
-    
+        st.success("Congratulations! You guessed the correct number.")
 
     # ---------------- LOSS SCREEN ----------------
-    
     elif st.session_state.game_over:
 
         # Page Tear Animation
@@ -480,7 +457,7 @@ if st.session_state.won:
         </div>
         """, unsafe_allow_html=True)
 
-  # Falling Confetti Animation
+        # Falling Confetti Animation
         st.markdown("""
         <div class="confetti-container">
             <div class="confetti" style="left:5%;animation-delay:0s"></div>
