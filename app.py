@@ -102,7 +102,7 @@ div.stButton > button[kind="primary"] {
 
 
 def reset_game():
-    st.session_state.secret_number = random.randint(0, 9)
+    st.session_state.secret_number = random.randint(0, 10)
     st.session_state.attempts = 3
     st.session_state.game_over = False
     st.session_state.won = False
