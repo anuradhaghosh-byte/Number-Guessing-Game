@@ -107,7 +107,7 @@ def reset_game():
     st.session_state.game_over = False
     st.session_state.won = False
     st.session_state.selected_number = None
-    st.session_state.message = "Select a number from 0 to 9"
+    st.session_state.message = "Select a number from 0 to 10"
 
 
 if "secret_number" not in st.session_state:
