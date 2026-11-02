@@ -173,7 +173,7 @@ div.stButton > button[kind="primary"]:hover {
     width: 35px;
     height: 45px;
     border-radius: 50%;
-    animation: fly 16s linear infinite;
+    animation: fly 12s linear infinite;
 }
 
 .balloon:after {
