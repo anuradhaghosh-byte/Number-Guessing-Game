@@ -88,7 +88,6 @@ div.stButton > button {
 div.stButton > button:hover {
     background: rgba(255,255,255,0.15) !important;
     color: white !important;
-    border: 1.5px solid white !important;
 }
 
 div.stButton > button[kind="primary"] {
@@ -110,6 +109,147 @@ div.stButton > button[kind="primary"] {
 
 .lose {
     color: #FF5252;
+}
+
+/* Balloon Animation */
+.balloon-container {
+    position: fixed;
+    bottom: -150px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.balloon {
+    position: absolute;
+    bottom: -120px;
+    width: 35px;
+    height: 45px;
+    border-radius: 50%;
+    animation: fly 7s linear infinite;
+}
+
+.balloon:after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 65px;
+    background: white;
+    top: 44px;
+    left: 17px;
+}
+
+.balloon:nth-child(1) {
+    left: 10%;
+    background: #ff4d6d;
+    animation-delay: 0s;
+}
+
+.balloon:nth-child(2) {
+    left: 30%;
+    background: #ffd166;
+    animation-delay: 1s;
+}
+
+.balloon:nth-child(3) {
+    left: 50%;
+    background: #06d6a0;
+    animation-delay: 2s;
+}
+
+.balloon:nth-child(4) {
+    left: 70%;
+    background: #4cc9f0;
+    animation-delay: 0.5s;
+}
+
+.balloon:nth-child(5) {
+    left: 90%;
+    background: #c77dff;
+    animation-delay: 1.5s;
+}
+
+@keyframes fly {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-120vh) rotate(20deg);
+    }
+}
+
+/* Falling Paper Confetti */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.confetti {
+    position: absolute;
+    top: -30px;
+    width: 12px;
+    height: 18px;
+    animation: paperFall 4s linear infinite;
+}
+
+.confetti:nth-child(5n+1) {
+    background: #ff4d6d;
+}
+
+.confetti:nth-child(5n+2) {
+    background: #ffd166;
+}
+
+.confetti:nth-child(5n+3) {
+    background: #06d6a0;
+}
+
+.confetti:nth-child(5n+4) {
+    background: #4cc9f0;
+}
+
+.confetti:nth-child(5n) {
+    background: #c77dff;
+}
+
+@keyframes paperFall {
+    0% {
+        transform: translateY(-20px) rotate(0deg);
+    }
+    100% {
+        transform: translateY(110vh) rotate(720deg);
+    }
+}
+
+/* Play Again Highlight */
+.st-key-play_again button {
+    background: linear-gradient(90deg, #ffffff, #d6e4ff) !important;
+    color: #141E30 !important;
+    border: 2px solid white !important;
+    font-size: 21px !important;
+    font-weight: 900 !important;
+    height: 58px !important;
+    box-shadow: 0 0 15px rgba(255,255,255,0.6);
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(255,255,255,0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255,255,255,0.9);
+        transform: scale(1.03);
+    }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -189,6 +329,19 @@ with st.container(border=True):
 
     if st.session_state.won:
 
+        # Balloon Animation
+        st.markdown("""
+        <div class="balloon-container">
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.balloons()
+
         st.markdown(
             '<div class="number-display">🎉</div>',
             unsafe_allow_html=True
@@ -202,6 +355,22 @@ with st.container(border=True):
         st.success("Congratulations! You guessed the correct number.")
 
     elif st.session_state.game_over:
+
+        # Falling Paper Animation
+        st.markdown("""
+        <div class="confetti-container">
+            <div class="confetti" style="left:5%;animation-delay:0s"></div>
+            <div class="confetti" style="left:15%;animation-delay:1s"></div>
+            <div class="confetti" style="left:25%;animation-delay:0.5s"></div>
+            <div class="confetti" style="left:35%;animation-delay:2s"></div>
+            <div class="confetti" style="left:45%;animation-delay:0.2s"></div>
+            <div class="confetti" style="left:55%;animation-delay:1.5s"></div>
+            <div class="confetti" style="left:65%;animation-delay:0.7s"></div>
+            <div class="confetti" style="left:75%;animation-delay:2.5s"></div>
+            <div class="confetti" style="left:85%;animation-delay:1s"></div>
+            <div class="confetti" style="left:95%;animation-delay:0.3s"></div>
+        </div>
+        """, unsafe_allow_html=True)
 
         st.markdown(
             '<div class="number-display">GAME OVER</div>',
@@ -300,13 +469,13 @@ with st.container(border=True):
 # Play Again
 if st.session_state.won or st.session_state.game_over:
 
-    if st.button(
-        "🔄 PLAY AGAIN",
-        use_container_width=True,
-        type="primary"
-    ):
-        reset_game()
-        st.rerun()
+    with st.container(key="play_again"):
+        if st.button(
+            "🔄 PLAY AGAIN",
+            use_container_width=True
+        ):
+            reset_game()
+            st.rerun()
 
 
 # Footer
