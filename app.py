@@ -157,6 +157,7 @@ div.stButton > button[kind="primary"]:hover {
 }
 
 /* ---------------- SLOW BALLOON ANIMATION ---------------- */
+/* ---------------- FAST THEN SLOW BALLOON ANIMATION ---------------- */
 .balloon-container {
     position: fixed;
     bottom: -150px;
@@ -173,7 +174,7 @@ div.stButton > button[kind="primary"]:hover {
     width: 35px;
     height: 45px;
     border-radius: 50%;
-    animation: fly 12s linear infinite;
+    animation: flyFastSlow 12s ease-out infinite;
 }
 
 .balloon:after {
@@ -195,31 +196,40 @@ div.stButton > button[kind="primary"]:hover {
 .balloon:nth-child(2) {
     left: 30%;
     background: #FFD166;
-    animation-delay: 3s;
+    animation-delay: 0.2s;
 }
 
 .balloon:nth-child(3) {
     left: 50%;
     background: #06D6A0;
-    animation-delay: 6s;
+    animation-delay: 0.4s;
 }
 
 .balloon:nth-child(4) {
     left: 70%;
     background: #4CC9F0;
-    animation-delay: 2s;
+    animation-delay: 0.6s;
 }
 
 .balloon:nth-child(5) {
     left: 90%;
     background: #C77DFF;
-    animation-delay: 5s;
+    animation-delay: 0.8s;
 }
 
-@keyframes fly {
+@keyframes flyFastSlow {
     0% {
         transform: translateY(0) rotate(0deg);
     }
+
+    15% {
+        transform: translateY(-55vh) rotate(8deg);
+    }
+
+    40% {
+        transform: translateY(-85vh) rotate(-8deg);
+    }
+
     100% {
         transform: translateY(-120vh) rotate(20deg);
     }
