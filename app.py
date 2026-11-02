@@ -1,4 +1,3 @@
-
 import random
 import streamlit as st
 
@@ -145,9 +144,6 @@ div.stButton > button[kind="primary"]:hover {
 
 .win {
     color: #4ADE80;
-    text-shadow: 0 0 10px #4ADE80,
-                 0 0 25px #22C55E;
-    animation: winGlow 1.5s infinite alternate;
 }
 
 .lose {
@@ -427,107 +423,6 @@ div.stButton > button[kind="primary"]:hover {
 }
 
 
-/* ---------------- WIN CELEBRATION ANIMATION ---------------- */
-
-.win-celebration {
-    position: relative;
-    text-align: center;
-    height: 180px;
-    overflow: hidden;
-    padding-top: 15px;
-}
-
-.win-emoji {
-    display: inline-block;
-    font-size: 48px;
-    margin: 8px;
-    animation: winBounce 1.3s infinite ease-in-out;
-    filter: drop-shadow(0 0 12px #FFD166);
-}
-
-.win-emoji:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.win-emoji:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-.win-emoji:nth-child(4) {
-    animation-delay: 0.6s;
-}
-
-@keyframes winBounce {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg) scale(1);
-    }
-
-    50% {
-        transform: translateY(-25px) rotate(15deg) scale(1.2);
-    }
-}
-
-/* Floating Celebration Emojis */
-
-.win-floating {
-    position: absolute;
-    bottom: -40px;
-    font-size: 28px;
-    animation: winFloat 5s linear infinite;
-}
-
-.win-floating:nth-child(5) {
-    left: 10%;
-    animation-delay: 0s;
-}
-
-.win-floating:nth-child(6) {
-    left: 30%;
-    animation-delay: 1s;
-}
-
-.win-floating:nth-child(7) {
-    left: 55%;
-    animation-delay: 2s;
-}
-
-.win-floating:nth-child(8) {
-    left: 80%;
-    animation-delay: 0.5s;
-}
-
-@keyframes winFloat {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0;
-    }
-
-    20% {
-        opacity: 1;
-    }
-
-    100% {
-        transform: translateY(-220px) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-/* Win Text Glow */
-
-@keyframes winGlow {
-    from {
-        transform: scale(1);
-        text-shadow: 0 0 8px #4ADE80;
-    }
-
-    to {
-        transform: scale(1.08);
-        text-shadow: 0 0 25px #4ADE80,
-                     0 0 40px #22C55E;
-    }
-}
-
-
 /* Footer */
 .footer {
     text-align: center;
@@ -624,25 +519,8 @@ with st.container(border=True):
         </div>
         """, unsafe_allow_html=True)
 
-        # Animated Celebration Emojis
-        st.markdown("""
-        <div class="win-celebration">
-
-            <span class="win-emoji">🎉</span>
-            <span class="win-emoji">🎊</span>
-            <span class="win-emoji">🥳</span>
-            <span class="win-emoji">✨</span>
-
-            <span class="win-floating">🎈</span>
-            <span class="win-floating">⭐</span>
-            <span class="win-floating">🎊</span>
-            <span class="win-floating">💖</span>
-
-        </div>
-        """, unsafe_allow_html=True)
-
         st.markdown(
-            '<div class="number-display">🏆</div>',
+            '<div class="number-display">🎉</div>',
             unsafe_allow_html=True
         )
 
@@ -652,7 +530,7 @@ with st.container(border=True):
         )
 
         st.success(
-            "Congratulations! You guessed the correct number. 🎉"
+            "Congratulations! You guessed the correct number."
         )
 
 
@@ -830,4 +708,4 @@ st.markdown(
     'Made with ❤️ using Python & Streamlit'
     '</div>',
     unsafe_allow_html=True
-)
+)  
