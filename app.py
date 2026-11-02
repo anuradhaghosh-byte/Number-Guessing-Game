@@ -466,8 +466,10 @@ if st.session_state.won:
     )
 
     st.success("Congratulations! You guessed the correct number.")
+    
 
     # ---------------- LOSS SCREEN ----------------
+    
     elif st.session_state.game_over:
 
         # Page Tear Animation
@@ -478,7 +480,7 @@ if st.session_state.won:
         </div>
         """, unsafe_allow_html=True)
 
-        # Falling Confetti Animation
+  # Falling Confetti Animation
         st.markdown("""
         <div class="confetti-container">
             <div class="confetti" style="left:5%;animation-delay:0s"></div>
