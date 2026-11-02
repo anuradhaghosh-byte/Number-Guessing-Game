@@ -32,8 +32,8 @@ if "guess_distance" not in st.session_state:
 st.markdown("""
 <style>
 .stApp {
-    background: linear-gradient(135deg, #101323, #202743, #111827);
-    color: white;
+    background: linear-gradient(135deg, #101426, #191d38, #242044);
+    color: #e2e8f0;
 }
 
 .block-container {
@@ -41,8 +41,9 @@ st.markdown("""
     padding-top: 2rem;
 }
 
+/* Headings and text */
 h1, h2, h3, p, label {
-    color: white !important;
+    color: #e2e8f0 !important;
 }
 
 .game-title {
@@ -50,109 +51,87 @@ h1, h2, h3, p, label {
     font-size: 38px;
     font-weight: 900;
     letter-spacing: 3px;
-    color: white;
+    color: #a78bfa;
     margin-bottom: 5px;
 }
 
 .subtitle {
     text-align: center;
-    color: #b9c3dd;
+    color: #a5b4cc;
     font-size: 15px;
     margin-bottom: 25px;
 }
 
+/* Game card */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid #45436b;
     border-radius: 22px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(35, 39, 70, 0.85);
     padding: 20px;
 }
 
-.number-display {
-    background: rgba(255,255,255,0.08);
-    border: 2px solid rgba(255,255,255,0.35);
-    border-radius: 18px;
-    text-align: center;
-    padding: 22px 10px;
-    font-size: 52px;
-    font-weight: 900;
-    color: white;
-    margin: 15px 0 20px 0;
-    min-height: 105px;
-}
-
+/* Number display */
 .number-label {
     text-align: center;
-    color: #d7def2;
+    color: #a5b4fc;
     font-size: 14px;
     letter-spacing: 2px;
     font-weight: bold;
 }
 
+.number-display {
+    background: #171b32;
+    border: 2px solid #7770c9;
+    border-radius: 18px;
+    text-align: center;
+    padding: 22px 10px;
+    font-size: 52px;
+    font-weight: 900;
+    color: #67e8f9;
+    margin: 15px 0 20px 0;
+    min-height: 105px;
+}
+
+/* Number buttons */
 div.stButton > button {
     border-radius: 12px;
     height: 48px;
     font-size: 20px;
     font-weight: bold;
-    border: 1.5px solid white;
-    background: transparent;
-    color: white;
+    border: 1.5px solid #7770c9;
+    background: #292747;
+    color: #e0e7ff;
     transition: 0.2s;
 }
 
 div.stButton > button:hover {
-    background: white;
-    color: #17203a;
-    border-color: white;
+    background: #6255a5;
+    color: #ffffff;
+    border-color: #a78bfa;
 }
 
-div.stButton > button:focus {
-    color: white;
-    border-color: #ffffff;
-}
-
+/* Submit and Play Again */
 div.stButton > button[kind="primary"] {
-    background: white;
-    color: #17203a;
+    background: #8b5cf6;
+    color: #ffffff;
     border: none;
     height: 50px;
     font-size: 17px;
+    font-weight: bold;
 }
 
 div.stButton > button[kind="primary"]:hover {
-    background: #dce5ff;
-    color: #111827;
+    background: #a78bfa;
+    color: #17132c;
 }
 
+/* Status and chances */
 .status-text {
     text-align: center;
-    color: #e5eaff;
+    color: #c4b5fd;
     font-size: 16px;
     font-weight: 600;
     margin: 12px 0;
-}
-
-.result-win {
-    text-align: center;
-    color: #54ff9b;
-    font-size: 30px;
-    font-weight: 900;
-    padding: 12px;
-}
-
-.result-lose {
-    text-align: center;
-    color: #ff7373;
-    font-size: 30px;
-    font-weight: 900;
-    padding: 12px;
-}
-
-.footer {
-    text-align: center;
-    color: #8e9ab9;
-    font-size: 12px;
-    margin-top: 25px;
 }
 
 .stars {
@@ -165,7 +144,7 @@ div.stButton > button[kind="primary"]:hover {
 .bar-track {
     height: 9px;
     width: 100%;
-    background: rgba(255,255,255,0.12);
+    background: #343451;
     border-radius: 20px;
     overflow: hidden;
     margin: 12px 0 22px 0;
@@ -177,6 +156,24 @@ div.stButton > button[kind="primary"]:hover {
     transition: all 0.4s ease;
 }
 
+/* Results */
+.result-win {
+    text-align: center;
+    color: #4ade80;
+    font-size: 30px;
+    font-weight: 900;
+    padding: 12px;
+}
+
+.result-lose {
+    text-align: center;
+    color: #fb7185;
+    font-size: 30px;
+    font-weight: 900;
+    padding: 12px;
+}
+
+/* Play Again animation */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.04); }
@@ -187,6 +184,12 @@ div.stButton > button[kind="primary"]:hover {
     animation: pulse 1.2s infinite;
 }
 
+.footer {
+    text-align: center;
+    color: #9299bb;
+    font-size: 12px;
+    margin-top: 25px;
+}
 </style>
 """, unsafe_allow_html=True)
 
