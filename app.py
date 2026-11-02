@@ -1,3 +1,4 @@
+
 import random
 import streamlit as st
 
@@ -30,9 +31,17 @@ st.markdown("""
 .stars {
     text-align: center;
     font-size: 38px;
-    margin: 20px 0;
+    margin: 20px 0 10px 0;
     letter-spacing: 10px;
     color: white;
+}
+
+.color-bar {
+    width: 100%;
+    height: 12px;
+    border-radius: 20px;
+    margin: 10px 0 25px 0;
+    transition: all 0.4s ease;
 }
 
 .game-box {
@@ -65,15 +74,9 @@ st.markdown("""
     margin: 20px 0;
 }
 
-.win {
-    color: #00FF99;
-}
+.win { color: #00FF99; }
+.lose { color: #FF5252; }
 
-.lose {
-    color: #FF5252;
-}
-
-/* Transparent number buttons */
 div.stButton > button {
     width: 100%;
     border-radius: 12px;
@@ -88,10 +91,8 @@ div.stButton > button {
 div.stButton > button:hover {
     background: rgba(255,255,255,0.15) !important;
     color: white !important;
-    border: 1.5px solid white !important;
 }
 
-/* Submit and Play Again buttons */
 div.stButton > button[kind="primary"] {
     background: white !important;
     color: #141E30 !important;
@@ -102,11 +103,13 @@ div.stButton > button[kind="primary"] {
 
 
 def reset_game():
-    st.session_state.secret_number = random.randint(0, 9)
+    st.session_state.secret_number = random.randint(0, 10)
     st.session_state.attempts = 3
     st.session_state.game_over = False
     st.session_state.won = False
     st.session_state.selected_number = None
+    st.session_state.last_guess = None
+    st.session_state.distance_color = "#FF3333"
     st.session_state.message = "Select a number from 0 to 9"
 
 
@@ -133,6 +136,15 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Color bar based on last guess distance
+bar_color = st.session_state.distance_color
+
+st.markdown(
+    f'<div class="color-bar" style="background: {bar_color}; '
+    f'box-shadow: 0 0 12px {bar_color};"></div>',
+    unsafe_allow_html=True
+)
+
 
 # Main game box
 with st.container(border=True):
@@ -144,30 +156,37 @@ with st.container(border=True):
     )
 
     if st.session_state.won:
+
         st.markdown(
             '<div class="number-display">🎉</div>',
             unsafe_allow_html=True
         )
+
         st.markdown(
             '<div class="result win">YOU WIN!</div>',
             unsafe_allow_html=True
         )
+
         st.success("Congratulations! You guessed the correct number.")
 
     elif st.session_state.game_over:
+
         st.markdown(
             '<div class="number-display">GAME OVER</div>',
             unsafe_allow_html=True
         )
+
         st.markdown(
             '<div class="result lose">GAME OVER</div>',
             unsafe_allow_html=True
         )
+
         st.error(
             f"The correct number was {st.session_state.secret_number}"
         )
 
     else:
+
         selected = st.session_state.selected_number
 
         display_number = (
@@ -185,7 +204,7 @@ with st.container(border=True):
             unsafe_allow_html=True
         )
 
-        # Number buttons: 0 to 9
+        # Number buttons 0 to 9
         for row in range(2):
             cols = st.columns(5)
 
@@ -207,23 +226,49 @@ with st.container(border=True):
             use_container_width=True,
             type="primary"
         ):
+
             if st.session_state.selected_number is None:
+
                 st.warning("Please choose a number first!")
 
             elif st.session_state.selected_number == st.session_state.secret_number:
+
                 st.session_state.won = True
+                st.session_state.distance_color = "#00FF66"
                 st.rerun()
 
             else:
+
+                difference = abs(
+                    st.session_state.selected_number
+                    - st.session_state.secret_number
+                )
+
+                st.session_state.last_guess = (
+                    st.session_state.selected_number
+                )
+
+                # Color based on closeness
+                if difference <= 1:
+                    st.session_state.distance_color = "#00FF66"
+                elif difference <= 3:
+                    st.session_state.distance_color = "#FFD700"
+                else:
+                    st.session_state.distance_color = "#FF3333"
+
                 st.session_state.attempts -= 1
 
                 if st.session_state.attempts == 0:
+
                     st.session_state.game_over = True
+
+                elif st.session_state.selected_number < st.session_state.secret_number:
+
+                    st.session_state.message = "Too Low! Try Again."
+
                 else:
-                    if st.session_state.selected_number < st.session_state.secret_number:
-                        st.session_state.message = "Too Low! Try Again."
-                    else:
-                        st.session_state.message = "Too High! Try Again."
+
+                    st.session_state.message = "Too High! Try Again."
 
                 st.session_state.selected_number = None
                 st.rerun()
@@ -233,6 +278,7 @@ with st.container(border=True):
 
 # Play Again
 if st.session_state.won or st.session_state.game_over:
+
     if st.button(
         "🔄 PLAY AGAIN",
         use_container_width=True,
