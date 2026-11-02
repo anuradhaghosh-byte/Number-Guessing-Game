@@ -88,6 +88,7 @@ div.stButton > button {
 div.stButton > button:hover {
     background: rgba(255,255,255,0.15) !important;
     color: white !important;
+    border: 1.5px solid white !important;
 }
 
 div.stButton > button[kind="primary"] {
@@ -114,6 +115,7 @@ div.stButton > button[kind="primary"] {
 """, unsafe_allow_html=True)
 
 
+# Reset Game
 def reset_game():
     st.session_state.secret_number = random.randint(0, 10)
     st.session_state.attempts = 3
@@ -121,13 +123,14 @@ def reset_game():
     st.session_state.won = False
     st.session_state.selected_number = None
     st.session_state.guess_distance = None
-    st.session_state.message = "Select a number from 0 to 9"
+    st.session_state.message = "Select a number from 0 to 10"
 
 
 if "secret_number" not in st.session_state:
     reset_game()
 
 
+# Heading
 st.markdown(
     '<div class="title">🎮 NUMBER GUESSING GAME</div>',
     unsafe_allow_html=True
@@ -138,6 +141,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # Stars
 stars = "⭐" * st.session_state.attempts
 empty_stars = "☆" * (3 - st.session_state.attempts)
@@ -147,14 +151,13 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # Guess Indicator Bar
 if st.session_state.guess_distance is None:
     bar_color = "transparent"
     bar_width = 0
 else:
     distance = st.session_state.guess_distance
-
-    # Closer = Green, farther = Red
     closeness = max(0, 1 - (distance / 10))
 
     red = int(255 * (1 - closeness))
@@ -216,6 +219,7 @@ with st.container(border=True):
 
     else:
 
+        # Selected Number Display
         selected = st.session_state.selected_number
 
         display_number = (
@@ -229,24 +233,25 @@ with st.container(border=True):
 
         st.markdown(
             "<p style='text-align:center; color:white; "
-            "font-size:17px;'>Choose a number from 0 to 9</p>",
+            "font-size:17px;'>Choose a number from 0 to 10</p>",
             unsafe_allow_html=True
         )
 
-        # Number Buttons 0 to 9
-        for row in range(2):
+        # Number Buttons 0 to 10
+        for row in range(3):
             cols = st.columns(5)
 
             for col in range(5):
                 number = row * 5 + col
 
-                with cols[col]:
-                    if st.button(
-                        str(number),
-                        key=f"number_{number}"
-                    ):
-                        st.session_state.selected_number = number
-                        st.rerun()
+                if number <= 10:
+                    with cols[col]:
+                        if st.button(
+                            str(number),
+                            key=f"number_{number}"
+                        ):
+                            st.session_state.selected_number = number
+                            st.rerun()
 
         st.write("")
 
@@ -304,6 +309,7 @@ if st.session_state.won or st.session_state.game_over:
         st.rerun()
 
 
+# Footer
 st.markdown(
     "<p style='text-align:center; color:#AAAAAA; margin-top:30px;'>"
     "Made with ❤️ using Python & Streamlit"
