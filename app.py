@@ -1,4 +1,3 @@
-
 import random
 import streamlit as st
 
@@ -31,17 +30,9 @@ st.markdown("""
 .stars {
     text-align: center;
     font-size: 38px;
-    margin: 20px 0 10px 0;
+    margin: 15px 0;
     letter-spacing: 10px;
     color: white;
-}
-
-.color-bar {
-    width: 100%;
-    height: 12px;
-    border-radius: 20px;
-    margin: 10px 0 25px 0;
-    transition: all 0.4s ease;
 }
 
 .game-box {
@@ -67,15 +58,21 @@ st.markdown("""
     margin: 15px 0 25px 0;
 }
 
-.result {
-    font-size: 35px;
-    font-weight: bold;
-    text-align: center;
-    margin: 20px 0;
+.guess-bar {
+    width: 100%;
+    height: 12px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 10px 0 25px 0;
 }
 
-.win { color: #00FF99; }
-.lose { color: #FF5252; }
+.guess-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: all 0.4s ease;
+}
 
 div.stButton > button {
     width: 100%;
@@ -98,6 +95,21 @@ div.stButton > button[kind="primary"] {
     color: #141E30 !important;
     border: 1px solid white !important;
 }
+
+.result {
+    font-size: 35px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.win {
+    color: #00FF99;
+}
+
+.lose {
+    color: #FF5252;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -108,8 +120,7 @@ def reset_game():
     st.session_state.game_over = False
     st.session_state.won = False
     st.session_state.selected_number = None
-    st.session_state.last_guess = None
-    st.session_state.distance_color = "#FF3333"
+    st.session_state.guess_distance = None
     st.session_state.message = "Select a number from 0 to 9"
 
 
@@ -136,17 +147,35 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Color bar based on last guess distance
-bar_color = st.session_state.distance_color
+# Guess Indicator Bar
+if st.session_state.guess_distance is None:
+    bar_color = "transparent"
+    bar_width = 0
+else:
+    distance = st.session_state.guess_distance
+
+    # Closer = Green, farther = Red
+    closeness = max(0, 1 - (distance / 10))
+
+    red = int(255 * (1 - closeness))
+    green = int(255 * closeness)
+
+    bar_color = f"rgb({red},{green},0)"
+    bar_width = 100
 
 st.markdown(
-    f'<div class="color-bar" style="background: {bar_color}; '
-    f'box-shadow: 0 0 12px {bar_color};"></div>',
+    f"""
+    <div class="guess-bar">
+        <div class="guess-fill"
+             style="width:{bar_width}%; background:{bar_color};">
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
 
-# Main game box
+# Main Game Box
 with st.container(border=True):
 
     st.markdown(
@@ -204,7 +233,7 @@ with st.container(border=True):
             unsafe_allow_html=True
         )
 
-        # Number buttons 0 to 9
+        # Number Buttons 0 to 9
         for row in range(2):
             cols = st.columns(5)
 
@@ -221,6 +250,7 @@ with st.container(border=True):
 
         st.write("")
 
+        # Submit Guess
         if st.button(
             "SUBMIT GUESS",
             use_container_width=True,
@@ -234,40 +264,26 @@ with st.container(border=True):
             elif st.session_state.selected_number == st.session_state.secret_number:
 
                 st.session_state.won = True
-                st.session_state.distance_color = "#00FF66"
+                st.session_state.guess_distance = 0
                 st.rerun()
 
             else:
 
-                difference = abs(
+                distance = abs(
                     st.session_state.selected_number
                     - st.session_state.secret_number
                 )
 
-                st.session_state.last_guess = (
-                    st.session_state.selected_number
-                )
-
-                # Color based on closeness
-                if difference <= 1:
-                    st.session_state.distance_color = "#00FF66"
-                elif difference <= 3:
-                    st.session_state.distance_color = "#FFD700"
-                else:
-                    st.session_state.distance_color = "#FF3333"
-
+                st.session_state.guess_distance = distance
                 st.session_state.attempts -= 1
 
                 if st.session_state.attempts == 0:
-
                     st.session_state.game_over = True
 
                 elif st.session_state.selected_number < st.session_state.secret_number:
-
                     st.session_state.message = "Too Low! Try Again."
 
                 else:
-
                     st.session_state.message = "Too High! Try Again."
 
                 st.session_state.selected_number = None
